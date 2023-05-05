@@ -1,6 +1,8 @@
-# differenceGenerator
 [![Maintainability](https://api.codeclimate.com/v1/badges/844a17bc1201eeaf7e36/maintainability)](https://codeclimate.com/github/veroleded/differenceGenerator/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/844a17bc1201eeaf7e36/test_coverage)](https://codeclimate.com/github/veroleded/differenceGenerator/test_coverage)
+[![Action status](https://github.com/veroleded/differenceGenerator/actions/workflows/main.yml/badge.svg)](https://github.com/veroleded/differenceGenerator/actions)
+
+# differenceGenerator
 
 ## Description
   A difference generator is a program that determines the difference between two data structures. This is a popular task for which there are many online services, such as http://www.jsondiff.com/. Such a mechanism is used when outputting tests or when automatically tracking changes in configuration files.
