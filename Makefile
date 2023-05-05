@@ -1,5 +1,3 @@
-setup:
-		npm link
 install:
 		npm ci
 gendiff:	
