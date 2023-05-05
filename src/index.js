@@ -9,7 +9,9 @@ const gendiff = async (filepath1, filepath2) => {
     ],
   );
 
-  console.log(buildTree(data1, data2));
+  const result = buildTree(data1, data2);
+
+  return result;
 };
 
-gendiff('__fixtures__/file1.json', '/Users/veroled/projects/differenceGenerator/__fixtures__/file2.json');
+export default gendiff;
