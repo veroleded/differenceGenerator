@@ -4,36 +4,36 @@
 
 ## Description
   A difference generator is a program that determines the difference between two data structures. This is a popular task for which there are many online services, such as http://www.jsondiff.com/. Such a mechanism is used when outputting tests or when automatically tracking changes in configuration files.
-# Utility features:
+### Utility features:
 * Support for different input formats: yaml, json
 * Report generation as plain text, stylish and json
 
-# Download:
+## Download:
 ```bash
 git clone git@github.com:veroleded/differenceGenerator.git
 ```
 
-# Install:
+## Install:
 ```bash
 make install
 ```
 
-# To globally install a package from a local directory:
+## To globally install a package from a local directory:
 ```bash
 npm link
 ```
 
-# Get more information about the program
+## Get more information about the program
 ```bash
 gendiff --help
 ```
 
-# Run program
+## Run program
 ```bash
 gendiff [filepath] [filepath]
 ```
 
-# Run features
+## Run features
 
 The path to the file can be absolute or relative
 
