@@ -6,25 +6,42 @@ const buildTree = (data1, data2) => {
   const unionKeys = _.union(keys1, keys2);
   const sortedKeys = _.sortBy(unionKeys);
 
-  const result = sortedKeys.map((key) => {
-    const value1 = data1[key];
-    const value2 = data2[key];
-    let line = '';
-
-    if (_.has(data1, key) && _.has(data2, key)) {
-      line = value1 === value2
-        ? `    ${key}: ${value1}`
-        : `  - ${key}: ${value1}\n  + ${key}: ${value2}`;
-    } else if (_.has(data1, key) && !_.has(data2, key)) {
-      line = `  - ${key}: ${value1}`;
-    } else {
-      line = `  + ${key}: ${value2}`;
+  const tree = sortedKeys.map((key) => {
+    if (!_.has(data1, key)) {
+      return {
+        key,
+        status: 'added',
+        value: data2[key],
+      };
     }
 
-    return line;
+    if (!_.has(data2, key)) {
+      return {
+        key,
+        status: 'removed',
+        value: data1[key],
+      };
+    }
+
+    if (_.isObject(data1[key]) && _.isObject(data2[key])) {
+      return {
+        key,
+        status: 'haveChildren',
+        value: buildTree(data1[key], data2[key]),
+      };
+    }
+
+    return data1[key] === data2[key]
+      ? { key, status: 'noChanged', value: data1[key] }
+      : {
+        key,
+        status: 'changed',
+        valueOld: data1[key],
+        valueNew: data2[key],
+      };
   });
 
-  return `{\n${result.join('\n')}\n}`;
+  return tree;
 };
 
 export default buildTree;

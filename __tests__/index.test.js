@@ -1,18 +1,17 @@
 import { fileURLToPath } from 'url';
-import { readFileSync } from 'fs';
+import fs from 'fs/promises';
 import path, { dirname } from 'path';
 import gendiff from '../src/index.js';
-import normalizator from '../src/parser.js';
+import normalizator from '../src/normalizator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const getFixturePath = (fileName) => path.join(__dirname, '..', '__fixtures__', fileName);
-const getFileData = (fileName) => readFileSync(getFixturePath(fileName), 'utf-8');
-
-const filepath1NoDeep = getFixturePath('file1NoDeep.json');
-const filepath2NoDeep = getFixturePath('file2NoDeep.json');
-const expectedNoDeep = getFileData('expectedNoDeep.txt');
+const getFileData = async (fileName) => {
+  const result = await fs.readFile(getFixturePath(fileName), 'utf-8');
+  return result;
+};
 
 describe('test modules', () => {
   test('normalizator', async () => {
@@ -22,13 +21,29 @@ describe('test modules', () => {
       proxy: '123.234.53.22',
       follow: false,
     };
+    expect(await normalizator(getFixturePath('file1NoDeep.yaml'))).toEqual(expected);
     expect(await normalizator(getFixturePath('file1NoDeep.json'))).toEqual(expected);
   });
 });
 
 describe('test gendiff', () => {
-  test('noDeep', async () => {
-    const actual = await gendiff(filepath1NoDeep, filepath2NoDeep);
-    expect(actual).toBe(expectedNoDeep);
+  test('no Deep', async () => {
+    const filepath1 = getFixturePath('file1NoDeep.json');
+    const filepath2 = getFixturePath('file2NoDeep.yml');
+    const expected = await getFileData('expectedNoDeep.txt');
+
+    const actual = await gendiff(filepath1, filepath2);
+
+    expect(actual).toBe(expected);
+  });
+
+  test('deep', async () => {
+    const filepath1 = getFixturePath('file1Deep.json');
+    const filepath2 = getFixturePath('file2Deep.json');
+    const expected = await getFileData('expectedDeep.txt');
+
+    const actual = await gendiff(filepath1, filepath2);
+
+    expect(actual).toBe(expected);
   });
 });

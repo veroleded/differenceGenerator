@@ -1,8 +1,11 @@
 import path from 'path';
 import fs from 'fs/promises';
+import yaml from 'js-yaml';
 
 const parsers = {
   '.json': JSON.parse,
+  '.yaml': yaml.load,
+  '.yml': yaml.load,
 };
 
 const normalizator = async (filepath) => {
