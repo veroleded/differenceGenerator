@@ -37,12 +37,32 @@ describe('test gendiff', () => {
     expect(actual).toBe(expected);
   });
 
-  test('deep', async () => {
+  test('deep stylish', async () => {
     const filepath1 = getFixturePath('file1Deep.json');
     const filepath2 = getFixturePath('file2Deep.json');
     const expected = await getFileData('expectedDeep.txt');
 
     const actual = await gendiff(filepath1, filepath2);
+
+    expect(actual).toBe(expected);
+  });
+
+  test('deep plain', async () => {
+    const filepath1 = getFixturePath('file1Deep.json');
+    const filepath2 = getFixturePath('file2Deep.json');
+    const expected = await getFileData('expectedDeepPlain.txt');
+
+    const actual = await gendiff(filepath1, filepath2, 'plain');
+
+    expect(actual).toBe(expected);
+  });
+
+  test('deep json', async () => {
+    const filepath1 = getFixturePath('file1Deep.json');
+    const filepath2 = getFixturePath('file2Deep.json');
+    const expected = await getFileData('expectedDeepJson.json');
+
+    const actual = await gendiff(filepath1, filepath2, 'json');
 
     expect(actual).toBe(expected);
   });

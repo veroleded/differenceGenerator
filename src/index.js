@@ -1,12 +1,9 @@
+import _ from 'lodash';
 import normalizator from './normalizator.js';
 import buildTree from './buildTree.js';
-import stylish from './formatters/stylish.js';
+import formatters from './formatters/index.js';
 
-const formatters = {
-  stylish,
-};
-
-const gendiff = async (filepath1, filepath2, formatter = 'staylish') => {
+const gendiff = async (filepath1, filepath2, format = 'stylish') => {
   const [data1, data2] = await Promise.all(
     [
       normalizator(filepath1),
@@ -15,8 +12,10 @@ const gendiff = async (filepath1, filepath2, formatter = 'staylish') => {
   );
 
   const tree = buildTree(data1, data2);
-
-  return formatters[formatter](tree);
+  if (_.has(formatters, format)) {
+    return formatters[format](tree);
+  }
+  throw new Error('Incorrect format.');
 };
 
 export default gendiff;
