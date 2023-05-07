@@ -21,63 +21,52 @@ const stringify = (data, depth) => {
   return `{\n${str.join('\n')}\n${indentForBrecket}}`;
 };
 
+const nodeHandler = (key, value, depth, valueHandler, specSymbol) => {
+  const indentForStart = intendCalc(depth, specSymbol);
+
+  return `${indentForStart}${key}: ${valueHandler(value, depth + 1)}`;
+};
+
 const stylish = (globalTree) => {
-  const hundler = (tree, depth) => {
-    const str = tree.map((node) => {
-      switch (node.status) {
-        case 'added': {
-          const specSymbol = '+ ';
-          const indentForStart = intendCalc(depth, specSymbol);
+  const handler = (tree, depth) => {
+    const nodeHandlers = {
+      added: (node) => {
+        const specSymbol = '+ ';
+        return nodeHandler(node.key, node.value, depth, stringify, specSymbol);
+      },
 
-          return `${indentForStart}${node.key}: ${stringify(node.value, depth + 1)}`;
-        }
+      removed: (node) => {
+        const specSymbol = '- ';
+        return nodeHandler(node.key, node.value, depth, stringify, specSymbol);
+      },
 
-        case 'removed': {
-          const specSymbol = '- ';
-          const indentForStart = intendCalc(depth, specSymbol);
+      noChanged: (node) => {
+        const specSymbol = '  ';
+        return nodeHandler(node.key, node.value, depth, stringify, specSymbol);
+      },
 
-          return `${indentForStart}${node.key}: ${stringify(node.value, depth + 1)}`;
-        }
+      changed: (node) => {
+        const specSymbolForOld = '- ';
+        const specSymbolForNew = '+ ';
+        const strOld = nodeHandler(node.key, node.valueOld, depth, stringify, specSymbolForOld);
+        const strNew = nodeHandler(node.key, node.valueNew, depth, stringify, specSymbolForNew);
 
-        case 'noChanged': {
-          const specSymbol = '  ';
-          const indentForStart = intendCalc(depth, specSymbol);
+        return [strOld, strNew].join('\n');
+      },
 
-          return `${indentForStart}${node.key}: ${stringify(node.value, depth + 1)}`;
-        }
+      haveChildren: (node) => {
+        const specSymbol = '  ';
+        return nodeHandler(node.key, node.value, depth, handler, specSymbol);
+      },
+    };
 
-        case 'changed': {
-          const specSymbolForOld = '- ';
-          const specSymbolForNew = '+ ';
-          const intendForOld = intendCalc(depth, specSymbolForOld);
-          const intendForNew = intendCalc(depth, specSymbolForNew);
-
-          const strOld = (
-            `${intendForOld}${node.key}: ${stringify(node.valueOld, depth + 1)}`
-          );
-          const strNew = (
-            `${intendForNew}${node.key}: ${stringify(node.valueNew, depth + 1)}`
-          );
-
-          return [strOld, strNew].join('\n');
-        }
-
-        case 'haveChildren': {
-          const specSymbol = '  ';
-          const indentForStart = intendCalc(depth, specSymbol);
-          return `${indentForStart}${node.key}: ${hundler(node.value, depth + 1)}`;
-        }
-
-        default:
-          throw new Error('No such status exists');
-      }
-    });
-
+    const str = tree.map((node) => nodeHandlers[node.status](node, depth));
     const intendForBrecket = '    '.repeat(depth);
+
     return `{\n${str.join('\n')}\n${intendForBrecket}}`;
   };
 
-  return hundler(globalTree, 0);
+  return handler(globalTree, 0);
 };
 
 export default stylish;
