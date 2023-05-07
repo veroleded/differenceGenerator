@@ -46,14 +46,14 @@ make test
 
 ### Example of gendiff work:
 ``` bash
-// формат plain
+# формат plain
 gendiff --format plain path/to/file.yml another/path/file.json
 
 Property 'common.follow' was added with value: false
 Property 'group1.baz' was updated. From 'bas' to 'bars'
 Property 'group2' was removed
 
-// формат stylish
+# формат stylish
 gendiff filepath1.json filepath2.json
 
 {
