@@ -45,7 +45,7 @@ make test
 ```
 
 ### Example of gendiff work:
-``` js
+``` bash
 // формат plain
 gendiff --format plain path/to/file.yml another/path/file.json
 
